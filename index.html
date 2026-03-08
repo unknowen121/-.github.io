@@ -1,56 +1,756 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>云滇非遗荟</title>
-<style>
-  *{margin:0;padding:0;box-sizing:border-box;font-family: "Microsoft YaHei",sans-serif}
-  body{background:#f6f7f9;color:#333;line-height:1.7}
-  .header{background:#2c5234;color:#fff;padding:20px;text-align:center}
-  .banner{background:#3a6644;color:#ffd700;padding:40px 20px;text-align:center}
-  .container{max-width:1000px;margin:0 auto;padding:20px}
-  .title{text-align:center;color:#2c5234;margin:30px 0;font-size:22px}
-  .card{background:#fff;border-radius:12px;padding:25px;margin:20px 0;box-shadow:0 2px 10px rgba(0,0,0,0.08)}
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:20px 0}
-  .item{background:#fff;padding:15px;border-radius:8px;text-align:center}
-  .footer{background:#2c5234;color:#fff;text-align:center;padding:30px;margin-top:40px}
-  @media(max-width:768px){.grid{grid-template-columns:1fr 1fr}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>云滇非遗荟 - 云南少数民族非遗文化传承与产业化平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        // Tailwind 自定义配置
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#9D2933', // 民族红
+                        secondary: '#D9A566', // 暖金
+                        accent: '#2F5233', // 生态绿
+                        neutral: '#F5F0E6', // 米白
+                        dark: '#2C2622', // 深棕
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            }
+            .bg-blur {
+                backdrop-filter: blur(8px);
+            }
+            .scroll-smooth {
+                scroll-behavior: smooth;
+            }
+        }
+
+        /* 全局样式 */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* 民族风分隔线 */
+        .ethnic-divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #9D2933, #D9A566, #2F5233, transparent);
+        }
+
+        /* 卡片悬停效果 */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
-<body>
+<body class="bg-neutral text-dark">
+    <!-- 导航栏 -->
+    <header class="fixed w-full top-0 z-50 transition-all duration-300" id="navbar">
+        <nav class="bg-white/90 bg-blur shadow-md">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-2">
+                    <span class="text-primary text-2xl font-bold">云滇非遗荟</span>
+                    <i class="fa fa-leaf text-accent text-xl"></i>
+                </a>
 
-<div class="header">
-  <h1>云滇非遗荟</h1>
-</div>
+                <!-- 桌面端导航 -->
+                <ul class="hidden md:flex gap-8 text-lg">
+                    <li><a href="#home" class="hover:text-primary transition-colors">首页</a></li>
+                    <li><a href="#products" class="hover:text-primary transition-colors">非遗产品</a></li>
+                    <li><a href="#courses" class="hover:text-primary transition-colors">研学课程</a></li>
+                    <li><a href="#culture" class="hover:text-primary transition-colors">非遗文化</a></li>
+                    <li><a href="#help-farmers" class="hover:text-primary transition-colors">非遗助农</a></li>
+                    <li><a href="#about" class="hover:text-primary transition-colors">关于我们</a></li>
+                </ul>
 
-<div class="banner">
-  <h2>非遗活态传承 · 助力乡村振兴</h2>
-</div>
+                <!-- 移动端菜单按钮 -->
+                <button class="md:hidden text-dark text-xl" id="menuBtn">
+                    <i class="fa fa-bars"></i>
+                </button>
 
-<div class="container">
-  <div class="title">项目背景</div>
-  <div class="card">
-    <p>国家大力支持非遗保护与乡村振兴融合发展，云南拥有25个少数民族、百余种非遗项目，2024年非遗产业收入29.75亿元，同比增长20%。</p>
-  </div>
+                <!-- 搜索和购物车 -->
+                <div class="hidden md:flex items-center gap-4">
+                    <div class="relative">
+                        <input type="text" placeholder="搜索非遗产品/课程" class="py-1 px-3 rounded border border-gray-300 focus:outline-none focus:border-primary">
+                        <i class="fa fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                    </div>
+                    <a href="#" class="relative text-lg">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span class="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </a>
+                    <a href="#" class="bg-primary text-white px-4 py-1 rounded hover:bg-primary/90 transition-colors">登录/注册</a>
+                </div>
+            </div>
 
-  <div class="title">核心数据</div>
-  <div class="grid">
-    <div class="item">29.75亿元<br>年收入</div>
-    <div class="item">20%<br>增长率</div>
-    <div class="item">3000万+<br>年游客</div>
-  </div>
+            <!-- 移动端导航菜单 -->
+            <div class="md:hidden hidden bg-white absolute w-full shadow-lg" id="mobileMenu">
+                <ul class="px-4 py-2">
+                    <li><a href="#home" class="block py-2 hover:text-primary">首页</a></li>
+                    <li><a href="#products" class="block py-2 hover:text-primary">非遗产品</a></li>
+                    <li><a href="#courses" class="block py-2 hover:text-primary">研学课程</a></li>
+                    <li><a href="#culture" class="block py-2 hover:text-primary">非遗文化</a></li>
+                    <li><a href="#help-farmers" class="block py-2 hover:text-primary">非遗助农</a></li>
+                    <li><a href="#about" class="block py-2 hover:text-primary">关于我们</a></li>
+                    <li class="py-2">
+                        <div class="relative">
+                            <input type="text" placeholder="搜索非遗产品/课程" class="w-full py-2 px-3 rounded border border-gray-300">
+                            <i class="fa fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                        </div>
+                    </li>
+                    <li class="flex gap-2 py-2">
+                        <a href="#" class="flex-1 bg-primary text-white text-center py-2 rounded">登录</a>
+                        <a href="#" class="flex-1 border border-primary text-primary text-center py-2 rounded">注册</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
 
-  <div class="title">痛点与解决方案</div>
-  <div class="card">
-    <p><strong>痛点：</strong>销路窄、转化率低、传播弱、研学不规范</p>
-    <p><strong>方案：</strong>线上交易+线下研学一体化平台</p>
-  </div>
-</div>
+    <!-- 首页横幅 -->
+    <section id="home" class="pt-16">
+        <div class="relative h-[80vh] min-h-[500px] bg-cover bg-center" style="background-image: url('https://picsum.photos/id/1036/1920/1080');">
+            <div class="absolute inset-0 bg-dark/50 flex items-center">
+                <div class="container mx-auto px-4 text-white">
+                    <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold mb-4 text-shadow">
+                        云滇非遗荟<br>让非遗文化活起来
+                    </h1>
+                    <p class="text-[clamp(1rem,2vw,1.25rem)] mb-8 max-w-2xl text-shadow">
+                        聚焦云南25个少数民族百余种非遗资源，打造线上交易+线下研学一体化平台，<br>推动非遗文化活态传承与产业化发展
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#products" class="bg-primary text-white px-8 py-3 rounded-lg text-lg hover:bg-primary/90 transition-colors">
+                            浏览非遗产品
+                        </a>
+                        <a href="#courses" class="bg-white text-primary px-8 py-3 rounded-lg text-lg hover:bg-gray-100 transition-colors">
+                            预约研学课程
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<div class="footer">
-  <p>云滇非遗荟 — 非遗文化传承平台</p>
-</div>
+        <!-- 核心优势 -->
+        <div class="container mx-auto px-4 py-16">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-center mb-12">核心特色</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+                <!-- 资源专属化 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i class="fa fa-unlock-alt text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-3">资源专属化</h3>
+                    <p class="text-center text-gray-600">与省非遗保护中心独家合作，整合16州市百余种非遗资源，原创真迹保障</p>
+                </div>
 
+                <!-- 模式一体化 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i class="fa fa-link text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-3">模式一体化</h3>
+                    <p class="text-center text-gray-600">线上引流-线下体验-双向转化闭环，产品消费与文化体验深度融合</p>
+                </div>
+
+                <!-- 服务标准化 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i class="fa fa-check-square-o text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-3">服务标准化</h3>
+                    <p class="text-center text-gray-600">一物一溯源，研学课程标准化，专业导师+完善安全保障体系</p>
+                </div>
+
+                <!-- 文化体验化 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i class="fa fa-hand-spock-o text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-3">文化体验化</h3>
+                    <p class="text-center text-gray-600">打破静态展示，沉浸式体验让消费者认同文化，实现活态传承</p>
+                </div>
+
+                <!-- 助农产业化 -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i class="fa fa-leaf text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-3">助农产业化</h3>
+                    <p class="text-center text-gray-600">免费运营推广服务，直接对接市场，助力民族地区乡村振兴</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据亮点 -->
+        <div class="bg-accent/10 py-12">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                    <div>
+                        <p class="text-[clamp(2rem,4vw,3rem)] font-bold text-accent">25+</p>
+                        <p class="text-lg">少数民族种类</p>
+                    </div>
+                    <div>
+                        <p class="text-[clamp(2rem,4vw,3rem)] font-bold text-accent">100+</p>
+                        <p class="text-lg">非遗项目数量</p>
+                    </div>
+                    <div>
+                        <p class="text-[clamp(2rem,4vw,3rem)] font-bold text-accent">29.75亿</p>
+                        <p class="text-lg">2024年非遗产业收入</p>
+                    </div>
+                    <div>
+                        <p class="text-[clamp(2rem,4vw,3rem)] font-bold text-accent">20%</p>
+                        <p class="text-lg">年收入同比增长</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 非遗产品板块 -->
+    <section id="products" class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-center mb-4">非遗产品</h2>
+            <div class="ethnic-divider w-24 mx-auto mb-12"></div>
+            
+            <!-- 产品分类 -->
+            <div class="flex flex-wrap justify-center gap-4 mb-10">
+                <button class="px-6 py-2 bg-primary text-white rounded-full">全部</button>
+                <button class="px-6 py-2 bg-white border border-gray-300 rounded-full hover:border-primary transition-colors">彝族刺绣</button>
+                <button class="px-6 py-2 bg-white border border-gray-300 rounded-full hover:border-primary transition-colors">白族扎染</button>
+                <button class="px-6 py-2 bg-white border border-gray-300 rounded-full hover:border-primary transition-colors">傣族剪纸</button>
+                <button class="px-6 py-2 bg-white border border-gray-300 rounded-full hover:border-primary transition-colors">纳西族东巴画</button>
+                <button class="px-6 py-2 bg-white border border-gray-300 rounded-full hover:border-primary transition-colors">普洱茶制作</button>
+            </div>
+            
+            <!-- 产品列表 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 产品1 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <div class="h-60 overflow-hidden">
+                        <img src="https://picsum.photos/id/1040/600/400" alt="彝族手工刺绣披肩" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold">彝族手工刺绣披肩</h3>
+                            <span class="text-primary font-bold">¥298</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">非遗传承人手工制作，纯羊毛材质，传统纹样</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-500">一物一溯源 · 彝族非遗</span>
+                            <button class="bg-primary/10 text-primary px-3 py-1 rounded hover:bg-primary/20 transition-colors">
+                                <i class="fa fa-shopping-cart mr-1"></i> 加入购物车
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 产品2 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <div class="h-60 overflow-hidden">
+                        <img src="https://picsum.photos/id/1041/600/400" alt="白族扎染桌布" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold">白族扎染桌布</h3>
+                            <span class="text-primary font-bold">¥168</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">大理非遗扎染工艺，天然植物染料，手工制作</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-500">一物一溯源 · 白族非遗</span>
+                            <button class="bg-primary/10 text-primary px-3 py-1 rounded hover:bg-primary/20 transition-colors">
+                                <i class="fa fa-shopping-cart mr-1"></i> 加入购物车
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 产品3 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <div class="h-60 overflow-hidden">
+                        <img src="https://picsum.photos/id/1042/600/400" alt="傣族剪纸装饰画" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold">傣族剪纸装饰画</h3>
+                            <span class="text-primary font-bold">¥368</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">非遗传承人原创作品，传统孔雀纹样，实木装裱</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-500">一物一溯源 · 傣族非遗</span>
+                            <button class="bg-primary/10 text-primary px-3 py-1 rounded hover:bg-primary/20 transition-colors">
+                                <i class="fa fa-shopping-cart mr-1"></i> 加入购物车
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 产品4 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <div class="h-60 overflow-hidden">
+                        <img src="https://picsum.photos/id/1043/600/400" alt="普洱茶饼礼盒" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold">普洱茶饼礼盒</h3>
+                            <span class="text-primary font-bold">¥598</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">非遗制茶工艺，十年陈茶，精美民族风礼盒包装</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-500">一物一溯源 · 普洱茶非遗</span>
+                            <button class="bg-primary/10 text-primary px-3 py-1 rounded hover:bg-primary/20 transition-colors">
+                                <i class="fa fa-shopping-cart mr-1"></i> 加入购物车
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 查看更多按钮 -->
+            <div class="text-center mt-10">
+                <a href="#" class="inline-block border border-primary text-primary px-8 py-3 rounded-lg hover:bg-primary hover:text-white transition-colors">
+                    查看更多非遗产品
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 研学课程板块 -->
+    <section id="courses" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-center mb-4">非遗研学课程</h2>
+            <div class="ethnic-divider w-24 mx-auto mb-12"></div>
+            
+            <!-- 课程分类 -->
+            <div class="flex flex-wrap justify-center gap-4 mb-10">
+                <button class="px-6 py-2 bg-primary text-white rounded-full">全部课程</button>
+                <button class="px-6 py-2 bg-white border border-gray-300 rounded-full hover:border-primary transition-colors">一日体验</button>
+                <button class="px-6 py-2 bg-white border border-gray-300 rounded-full hover:border-primary transition-colors">三日研学</button>
+                <button class="px-6 py-2 bg-white border border-gray-300 rounded-full hover:border-primary transition-colors">五日深度</button>
+                <button class="px-6 py-2 bg-white border border-gray-300 rounded-full hover:border-primary transition-colors">亲子体验</button>
+                <button class="px-6 py-2 bg-white border border-gray-300 rounded-full hover:border-primary transition-colors">团队定制</button>
+            </div>
+            
+            <!-- 课程列表 -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- 课程1 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://picsum.photos/id/1050/800/500" alt="大理白族扎染研学一日体验" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="bg-secondary/20 text-secondary px-3 py-1 rounded-full text-sm">一日体验</span>
+                            <span class="text-primary font-bold text-xl">¥298/人</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">大理白族扎染研学一日体验</h3>
+                        <p class="text-gray-600 mb-4">跟随非遗传承人学习扎染技艺，从布料选择、图案设计到染色完成，亲手制作属于自己的扎染作品</p>
+                        <div class="flex items-center text-sm text-gray-500 mb-4">
+                            <div class="flex items-center mr-4"><i class="fa fa-map-marker mr-1 text-primary"></i> 大理周城</div>
+                            <div class="flex items-center"><i class="fa fa-clock-o mr-1 text-primary"></i> 09:00-16:00</div>
+                        </div>
+                        <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                            立即预约
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 课程2 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://picsum.photos/id/1051/800/500" alt="楚雄彝族刺绣三日研学" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="bg-secondary/20 text-secondary px-3 py-1 rounded-full text-sm">三日研学</span>
+                            <span class="text-primary font-bold text-xl">¥1280/人</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">楚雄彝族刺绣三日研学</h3>
+                        <p class="text-gray-600 mb-4">深入彝族村寨，系统学习彝族刺绣纹样、针法，参与彝族民俗活动，完成一件完整的刺绣作品</p>
+                        <div class="flex items-center text-sm text-gray-500 mb-4">
+                            <div class="flex items-center mr-4"><i class="fa fa-map-marker mr-1 text-primary"></i> 楚雄彝人古镇</div>
+                            <div class="flex items-center"><i class="fa fa-clock-o mr-1 text-primary"></i> 3天2晚</div>
+                        </div>
+                        <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                            立即预约
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 课程3 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://picsum.photos/id/1052/800/500" alt="西双版纳傣族文化五日深度研学" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="bg-secondary/20 text-secondary px-3 py-1 rounded-full text-sm">五日深度</span>
+                            <span class="text-primary font-bold text-xl">¥2680/人</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">西双版纳傣族文化五日深度研学</h3>
+                        <p class="text-gray-600 mb-4">体验傣族剪纸、傣陶制作、傣锦编织，参与泼水节民俗，学习傣语，深度感受傣族文化魅力</p>
+                        <div class="flex items-center text-sm text-gray-500 mb-4">
+                            <div class="flex items-center mr-4"><i class="fa fa-map-marker mr-1 text-primary"></i> 西双版纳</div>
+                            <div class="flex items-center"><i class="fa fa-clock-o mr-1 text-primary"></i> 5天4晚</div>
+                        </div>
+                        <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                            立即预约
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 查看更多按钮 -->
+            <div class="text-center mt-10">
+                <a href="#" class="inline-block border border-primary text-primary px-8 py-3 rounded-lg hover:bg-primary hover:text-white transition-colors">
+                    查看全部研学课程
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 非遗文化板块 -->
+    <section id="culture" class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-center mb-4">非遗文化</h2>
+            <div class="ethnic-divider w-24 mx-auto mb-12"></div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+                <div>
+                    <h3 class="text-2xl font-bold mb-6">云南非遗 活态传承</h3>
+                    <p class="text-gray-700 mb-4 leading-relaxed">
+                        云南省作为我国少数民族最多、非遗资源最丰富的省份，拥有彝族、白族、傣族等25个少数民族的百余种非遗项目。近年来，国家高度重视非物质文化遗产保护与乡村振兴战略融合发展，先后出台多项政策推动非遗与旅游、文创、教育等产业深度融合。
+                    </p>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        2024年云南省非遗产业收入达29.75亿元，同比增长20%，非遗产业已成为云南乡村振兴的重要抓手。但目前云南非遗产业仍面临销售渠道狭窄、文化传播形式单一、线下体验标准化不足等痛点。
+                    </p>
+                    <a href="#" class="inline-block bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                        了解更多非遗文化 <i class="fa fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <img src="https://picsum.photos/id/1060/600/800" alt="云南非遗文化" class="rounded-lg shadow-md h-full object-cover">
+                    <div class="grid grid-rows-2 gap-4">
+                        <img src="https://picsum.photos/id/1061/600/400" alt="非遗传承人" class="rounded-lg shadow-md h-full object-cover">
+                        <img src="https://picsum.photos/id/1062/600/400" alt="非遗技艺展示" class="rounded-lg shadow-md h-full object-cover">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 非遗传承人展示 -->
+            <h3 class="text-2xl font-bold text-center mb-8">非遗传承人</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 传承人1 -->
+                <div class="bg-white rounded-lg shadow-md p-6 text-center card-hover">
+                    <div class="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4">
+                        <img src="https://picsum.photos/id/1070/200/200" alt="李金花 - 彝族刺绣传承人" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="text-xl font-bold mb-1">李金花</h4>
+                    <p class="text-primary mb-3">彝族刺绣传承人</p>
+                    <p class="text-gray-600 text-sm">从事彝族刺绣40余年，擅长传统纹样设计与制作，培养传承人百余名</p>
+                </div>
+
+                <!-- 传承人2 -->
+                <div class="bg-white rounded-lg shadow-md p-6 text-center card-hover">
+                    <div class="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4">
+                        <img src="https://picsum.photos/id/1071/200/200" alt="张树芳 - 白族扎染传承人" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="text-xl font-bold mb-1">张树芳</h4>
+                    <p class="text-primary mb-3">白族扎染传承人</p>
+                    <p class="text-gray-600 text-sm">大理周城扎染世家，国家级非遗传承人，创新扎染工艺与现代设计结合</p>
+                </div>
+
+                <!-- 传承人3 -->
+                <div class="bg-white rounded-lg shadow-md p-6 text-center card-hover">
+                    <div class="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4">
+                        <img src="https://picsum.photos/id/1072/200/200" alt="玉应罕 - 傣族剪纸传承人" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="text-xl font-bold mb-1">玉应罕</h4>
+                    <p class="text-primary mb-3">傣族剪纸传承人</p>
+                    <p class="text-gray-600 text-sm">西双版纳傣族剪纸代表人物，作品融合传统与现代，多次获国家级奖项</p>
+                </div>
+
+                <!-- 传承人4 -->
+                <div class="bg-white rounded-lg shadow-md p-6 text-center card-hover">
+                    <div class="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4">
+                        <img src="https://picsum.photos/id/1073/200/200" alt="茶国珍 - 普洱茶制作传承人" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="text-xl font-bold mb-1">茶国珍</h4>
+                    <p class="text-primary mb-3">普洱茶制作传承人</p>
+                    <p class="text-gray-600 text-sm">百年制茶世家，坚守传统普洱茶制作工艺，专注古树茶制作与研究</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 非遗助农板块 -->
+    <section id="help-farmers" class="py-16 bg-accent/5">
+        <div class="container mx-auto px-4">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-center mb-4">非遗助农</h2>
+            <div class="ethnic-divider w-24 mx-auto mb-12"></div>
+            
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-2">
+                    <div class="p-8 lg:p-12">
+                        <h3 class="text-2xl font-bold mb-6">非遗助农 乡村振兴</h3>
+                        <p class="text-gray-700 mb-4 leading-relaxed">
+                            我们设立"非遗助农"专属板块，为偏远民族地区的非遗传承人提供免费的店铺运营、包装设计、品牌推广服务，直接对接市场，解决"有好产品无好销路"的痛点。
+                        </p>
+                        <p class="text-gray-700 mb-6 leading-relaxed">
+                            截至目前，平台已帮助云南16个州市的200余名非遗传承人拓宽销售渠道，带动民族村寨人均年收入增加3000元以上，真正实现非遗文化传承与乡村经济振兴的双赢。
+                        </p>
+                        <div class="grid grid-cols-2 gap-4 mb-8">
+                            <div class="text-center">
+                                <p class="text-3xl font-bold text-accent mb-1">200+</p>
+                                <p class="text-gray-600">帮扶传承人</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-3xl font-bold text-accent mb-1">¥3000+</p>
+                                <p class="text-gray-600">人均年增收</p>
+                            </div>
+                        </div>
+                        <a href="#" class="inline-block bg-accent text-white px-6 py-3 rounded-lg hover:bg-accent/90 transition-colors">
+                            申请非遗助农帮扶 <i class="fa fa-heart ml-1"></i>
+                        </a>
+                    </div>
+                    <div class="relative h-80 lg:h-auto">
+                        <img src="https://picsum.photos/id/1080/800/600" alt="非遗助农 乡村振兴" class="absolute inset-0 w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 助农案例 -->
+            <h3 class="text-2xl font-bold text-center mt-16 mb-8">助农案例</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- 案例1 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://picsum.photos/id/1081/600/400" alt="楚雄彝族刺绣村" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <h4 class="text-xl font-bold mb-2">楚雄彝族刺绣村</h4>
+                        <p class="text-gray-600 mb-4">通过平台推广，彝族刺绣产品月销售额从5万元提升至20万元，带动30名绣娘稳定就业</p>
+                        <a href="#" class="text-primary hover:underline">查看详情 <i class="fa fa-angle-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- 案例2 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://picsum.photos/id/1082/600/400" alt="大理扎染工坊" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <h4 class="text-xl font-bold mb-2">大理扎染工坊</h4>
+                        <p class="text-gray-600 mb-4">平台提供包装设计和品牌升级，扎染产品溢价提升40%，年销售额突破500万元</p>
+                        <a href="#" class="text-primary hover:underline">查看详情 <i class="fa fa-angle-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- 案例3 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://picsum.photos/id/1083/600/400" alt="普洱古茶村" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <h4 class="text-xl font-bold mb-2">普洱古茶村</h4>
+                        <p class="text-gray-600 mb-4">线上线下结合销售模式，帮助茶农直接对接消费者，茶叶收购价提升25%</p>
+                        <a href="#" class="text-primary hover:underline">查看详情 <i class="fa fa-angle-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我们板块 -->
+    <section id="about" class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-center mb-4">关于我们</h2>
+            <div class="ethnic-divider w-24 mx-auto mb-12"></div>
+            
+            <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-8 lg:p-10">
+                <h3 class="text-2xl font-bold mb-6">云滇非遗荟 项目介绍</h3>
+                <p class="text-gray-700 mb-4 leading-relaxed">
+                    "云滇非遗荟"是国内首个聚焦云南少数民族非遗文化的垂直型线上线下融合平台，应势而生，聚焦云南少数民族非遗文化，打造线上交易+线下研学一体化融合平台，破解云南非遗产业发展痛点，推动非遗文化活态传承与产业化发展，助力云南民族地区经济增收。
+                </p>
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    平台核心特色体现在资源专属化、模式一体化、服务标准化、文化体验化、助农产业化五个方面，致力于让更多人了解、体验、爱上云南非遗文化，同时帮助非遗传承人实现经济增收，推动非遗文化活态传承。
+                </p>
+                
+                <!-- 联系方式 -->
+                <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa fa-phone text-primary text-xl"></i>
+                        </div>
+                        <h4 class="font-bold mb-2">联系电话</h4>
+                        <p class="text-gray-600">400-888-9999</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa fa-envelope text-primary text-xl"></i>
+                        </div>
+                        <h4 class="font-bold mb-2">电子邮箱</h4>
+                        <p class="text-gray-600">contact@yndfyh.com</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fa fa-map-marker text-primary text-xl"></i>
+                        </div>
+                        <h4 class="font-bold mb-2">办公地址</h4>
+                        <p class="text-gray-600">云南省昆明市五华区非遗文化产业园</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部 -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <!-- 关于我们 -->
+                <div>
+                    <h4 class="text-xl font-bold mb-4 border-b border-white/20 pb-2">关于我们</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-secondary transition-colors">平台介绍</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">发展历程</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">合作伙伴</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">新闻动态</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">招贤纳士</a></li>
+                    </ul>
+                </div>
+
+                <!-- 非遗产品 -->
+                <div>
+                    <h4 class="text-xl font-bold mb-4 border-b border-white/20 pb-2">非遗产品</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-secondary transition-colors">彝族刺绣</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">白族扎染</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">傣族剪纸</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">纳西族东巴画</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">普洱茶制作</a></li>
+                    </ul>
+                </div>
+
+                <!-- 研学课程 -->
+                <div>
+                    <h4 class="text-xl font-bold mb-4 border-b border-white/20 pb-2">研学课程</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-secondary transition-colors">一日体验</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">三日研学</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">五日深度</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">亲子体验</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">团队定制</a></li>
+                    </ul>
+                </div>
+
+                <!-- 帮助中心 -->
+                <div>
+                    <h4 class="text-xl font-bold mb-4 border-b border-white/20 pb-2">帮助中心</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-secondary transition-colors">购物指南</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">预约流程</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">支付方式</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">售后政策</a></li>
+                        <li><a href="#" class="hover:text-secondary transition-colors">常见问题</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 版权信息 -->
+            <div class="border-t border-white/20 pt-8 text-center text-gray-400">
+                <p>© 2025 云滇非遗荟 版权所有 | 滇ICP备12345678号</p>
+                <p class="mt-2">本平台致力于云南少数民族非物质文化遗产的保护与传承，助力乡村振兴</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="backToTop" class="fixed bottom-8 right-8 bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-primary/90">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        const backToTop = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 100) {
+                navbar.classList.add('bg-white', 'shadow-lg');
+                navbar.classList.remove('bg-white/90');
+                backToTop.classList.remove('opacity-0', 'invisible');
+                backToTop.classList.add('opacity-100', 'visible');
+            } else {
+                navbar.classList.remove('bg-white', 'shadow-lg');
+                navbar.classList.add('bg-white/90');
+                backToTop.classList.add('opacity-0', 'invisible');
+                backToTop.classList.remove('opacity-100', 'visible');
+            }
+        });
+
+        // 移动端菜单
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuBtn.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+            const icon = menuBtn.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // 返回顶部
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                // 关闭移动端菜单
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                    const icon = menuBtn.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
 </html>
